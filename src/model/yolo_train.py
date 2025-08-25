@@ -16,7 +16,7 @@ def train_yolo_model():
     # Train the model
     model.train(
         data=str(BASE_DIR / "data.yaml"),
-        epochs=3,
+        epochs=10,
         imgsz=320,
         batch=4,
         workers=5,
