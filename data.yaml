@@ -1,0 +1,7 @@
+# File: data.yaml
+
+train: ../near-real-time-object-detection/dataset/yolo/train/images
+val: ../near-real-time-object-detection/dataset/yolo/val/images
+
+nc: 3
+names: ["Car", "Pedestrian", "Cyclist"]

@@ -36,3 +36,4 @@ YOLO_CLASS_MAP = {
 # Dataset split configuration
 SPLIT_TEST_SIZE = 0.2
 SEED = 42
+
