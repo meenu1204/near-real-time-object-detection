@@ -3,69 +3,89 @@
 import os
 import glob
 import cv2
-from src.utils.config import RAW_IMAGE_DIR, RAW_LABEL_DIR, OUT_IMAGE_DIR, OUT_LABEL_DIR, YOLO_CLASS_MAP
+from src.utils.config import YOLO_CLASS_MAP
 
-def convert_to_yolo(img_dir, label_dir, out_img_dir, out_label_dir):
+def convert_kitti_to_yolo(raw_img_dir, raw_label_dir, yolo_img_dir, yolo_label_dir):
     """
-    Converts the KITTI labels to YOLO format and copy corresponding images to YOLO dataset
-
+    Converts the KITTI labels to YOLO format
+        - Loop through all label files (and get corresponding images) in KITTI format
+        - Load images to get height and width (for normalisation purposes)
+        - Read each object line in KITTI label file and convert them to YOLO format (values between 0 and 1)
+        - Write image and label to YOLO format for training and val dataset
     Args:
-    img_dir: path to KITTI images directory
-    label_dir: path to KITTI labels directory
-    out_img_dir: path to output directory for YOLO converted images
-    out_label_dir: path to output directory for YOLO converted labels
-
-    Returns:
-
+         raw_img_dir (str): path to raw images
+         raw_label_dir (str): path to raw labels
+         yolo_img_dir (str): path to yolo images
+         yolo_label_dir (str): path to yolo converted labels
     """
 
-    os.makedirs(out_img_dir, exist_ok=True)
-    os.makedirs(out_label_dir, exist_ok=True)
+    label_file = sorted(glob.glob(os.path.join(raw_label_dir, "*.txt")))
 
-    for label_file in sorted(glob.glob(os.path.join(label_dir, "*.txt"))):
-        img_name = os.path.basename(label_file).replace(".txt", ".png")
-        img_path = os.path.join(img_dir, img_name)
+    # Loop through all label files in KITTI dataset
+    for label_file in sorted(glob.glob(os.path.join(raw_label_dir, "*.txt"))):
+        try:
+            img_name = os.path.basename(label_file).replace(".txt", ".png")
+            img_path = os.path.join(raw_img_dir, img_name)
 
-        print(img_path)
+            if not os.path.exists(img_path):
+                print(f"Warning: {img_path} does not exist")
+                continue
 
-        if not os.path.exists(img_path):
-            continue
+            # Load image for normalisation
+            img = cv2.imread(img_path)
 
-        img = cv2.imread(img_path)
-        h, w, _ = img.shape
+            if img is None:
+                print(f"Warning: {img} does not exist")
+                continue
 
-        yolo_labels  = []
-        with open(label_file, "r") as f:
-            for line in f:
-                parts = line.strip().split()
-                obj_class = parts[0]
+            h, w, _ = img.shape
 
-                if obj_class not in YOLO_CLASS_MAP:
-                    continue
+            yolo_labels  = []
+            # Read each object line in KITTI label file
+            with open(label_file, "r") as f:
+                for line in f:
+                    parts = line.strip().split()
+                    obj_class = parts[0]
 
-                xmin, ymin, xmax, ymax = map(float, parts[4:8])
+                    if obj_class not in YOLO_CLASS_MAP:
+                        continue
 
-                # Convert to YOLO format
-                x_center = (xmin + xmax) / 2.0 / w
-                y_center = (ymin + ymax) / 2.0 / h
-                width = (xmax - xmin) / w
-                height = (ymax - ymin) / h
+                    xmin, ymin, xmax, ymax = map(float, parts[4:8])
 
-                cls_id = YOLO_CLASS_MAP[obj_class]
-                yolo_labels.append(f"{cls_id} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}")
+                    # Check if bounding box is valid
+                    if xmin < 0 or xmax > w or ymin < 0 or ymax > h or xmax <= xmin or ymax <= ymin:
+                        print(f"Warning: Invalid bounding box in {label_file}")
+                        continue
 
-        out_label_file = os.path.join(out_label_dir, os.path.basename(label_file))
-        with open(out_label_file, "w") as f:
-            f.write("\n".join(yolo_labels))
+                    # Convert to YOLO normalised format
+                    x_center = (xmin + xmax) / 2.0 / w
+                    y_center = (ymin + ymax) / 2.0 / h
+                    width = (xmax - xmin) / w
+                    height = (ymax - ymin) / h
 
-        out_img_file = os.path.join(out_img_dir, img_name)
-        if not os.path.exists(out_img_file):
-            cv2.imwrite(out_img_file, img)
+                    cls_id = YOLO_CLASS_MAP[obj_class]
+                    yolo_labels.append(f"{cls_id} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}")
 
-    print("Converted KITTI labels to YOLO format")
+            if not yolo_labels:
+                print(f"Warning: {label_file} has no valid objects")
+                continue
 
-if __name__ == "__main__":
-    convert_to_yolo(RAW_IMAGE_DIR, RAW_LABEL_DIR, OUT_IMAGE_DIR,OUT_LABEL_DIR)
+            # Save label and image to YOLO folder
+            yolo_label_file = os.path.join(yolo_label_dir, os.path.basename(label_file))
+            with open(yolo_label_file, "w") as f:
+                f.write("\n".join(yolo_labels))
+
+            yolo_img_file = os.path.join(yolo_img_dir, img_name)
+            if not os.path.exists(yolo_img_file):
+                cv2.imwrite(yolo_img_file, img)
+
+            print(yolo_img_file, yolo_label_file)
+
+        except Exception as e:
+            print(f"Error processing {label_file}: {e}")
+
+    print("Converted all KITTI labels to YOLO format")
+
 
 
 

@@ -1,0 +1,3 @@
+scikit-learn
+python-dotenv
+opencv-python

@@ -1,0 +1,15 @@
+# Ignore datasets
+dataset/raw/*
+dataset/yolo/*
+
+# Ignore virtual environment
+.venv
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore system files
+.DS_store
+
+.idea/
