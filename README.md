@@ -19,6 +19,11 @@ A real-time computer vision pipeline that converts KITTI dataset labels to YOLO 
   - REST API endpoint (/predict) for object detection
   - Accepts images and return predictions with class and confidence.
 
+- Real-time Kafka Streaming
+  - Kafka Producer streams KITTI test images (as if from a live camera)
+  - Kafka Consumer reads stream and runs YOLO inference
+  - Live visualization (with counts of Cars, Pedestrians, and Cyclists)
+
 ## Project Setup
 
 1. Clone the repository
@@ -118,10 +123,24 @@ uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000
 curl -X POST "http://127.0.0.1:8000/predict" \
   -F "file=@test.png"
 ```
+8. Real-time Kaka Streaming
+- Start Kafka and create topic
+```bash
+brew services start kafka
+kafka-topics --create --topic kitti-stream --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+```
+- RUN producer (Sending KITTI test images)
+```bash
+python src/streaming/kafka_producer.py
+```
+- Run Kafka Consumer
+```bash
+python src/streaming/kafka_consumer.py
+``
    
 
 
   
-9. 
+10. 
 ```bash
 ```
