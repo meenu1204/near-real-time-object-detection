@@ -133,6 +133,10 @@ kafka-topics --create --topic kitti-stream --bootstrap-server localhost:9092 --p
 ```bash
 python src/streaming/kafka_producer.py
 ```
+- Run Kafka Consumer
+```bash
+python src/streaming/kafka_consumer.py
+``
    
 
 
