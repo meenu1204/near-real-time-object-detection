@@ -75,9 +75,38 @@ pip install -r requirements.txt
   │       └── labels/              # YOLO labels (converted from raw/val/label_2)
 
   ```
+6. Training YOLOv8 on the KITTI dataset (Since the focus was on building an end-to-end pipeline, we did not focus on improving the confidence score of model)
+  - yolo_train.py
+
+  ```bash
+  from ultralytics import YOLO
+  
+  model = YOLO("yolov8n.pt")
+  model.train(
+      data=str(BASE_DIR / "data.yaml"),
+      epochs=20,
+      imgsz=320,
+      batch=4,
+      workers=5,
+      name="yolov8n",
+      pretrained=True,
+      patience=5,
+      cache=False
+)
+```
+  - data.yml
+  ```
+  train: dataset/yolo/train/images
+  val: dataset/yolo/val/images
+  nc: 3
+  names: ["Car", "Pedestrian", "Cyclist"]
+
+  ```
+
+  - 
 
 
-6. cgvh
-7. bjj
+  
+8. bjj
 ```bash
 ```
