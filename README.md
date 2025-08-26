@@ -1,7 +1,7 @@
 # Near Real-time Object Detection
 
 ## Description
-A real-time computer vision pipeline that converts KITTI dataset labels to YOLO format, trains a YOLOv8 model for pedestrian, car and cyclist detection, and streams test images via Apache Kafka to simulate live camera feeds.
+Built a near real-time object detection pipeline using YOLOv8 and the KITTI dataset. Covers the full workflow—data preprocessing, splitting train/val sets, converting KITTI labels to YOLO format, training YOLOv8, and deploying inference with FastAPI. To enable streaming, integrated Apache Kafka, where a producer streams test image frames and a consumer runs YOLO inference to detect and count cars, pedestrians, and cyclists in real time.
 
 ## Features
 - Dataset handling:
