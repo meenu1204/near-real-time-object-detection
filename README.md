@@ -136,11 +136,4 @@ python src/streaming/kafka_producer.py
 - Run Kafka Consumer
 ```bash
 python src/streaming/kafka_consumer.py
-``
-   
-
-
-  
-10. 
-```bash
 ```
