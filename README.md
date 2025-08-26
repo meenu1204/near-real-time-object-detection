@@ -118,10 +118,20 @@ uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000
 curl -X POST "http://127.0.0.1:8000/predict" \
   -F "file=@test.png"
 ```
+8. Real-time Kaka Streaming
+- Start Kafka and create topic
+```bash
+brew services start kafka
+kafka-topics --create --topic kitti-stream --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+```
+- RUN producer (Sending KITTI test images)
+```bash
+python src/streaming/kafka_producer.py
+```
    
 
 
   
-9. 
+10. 
 ```bash
 ```
