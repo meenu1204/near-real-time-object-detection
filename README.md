@@ -102,11 +102,26 @@ pip install -r requirements.txt
   names: ["Car", "Pedestrian", "Cyclist"]
 
   ```
-
-  - 
+- Results of training are saved under runs/detect/yolov8n/. The best weights can be seen below:
+```bash
+runs/detect/yolov8n/weights/best.pt
+```
+7. Model serving:
+- Wrap best.pt inside a FastAPI service (src/api/app.py)
+- Provides a REST API (/predict) where clients can upload a test image and get predictions
+- Run locally with uvicorn
+```bash
+uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000
+```
+- Test the API using a Curl command in your Terminal
+```bash
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -F "file=@test.png"
+```
+   
 
 
   
-8. bjj
+9. 
 ```bash
 ```
