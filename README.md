@@ -94,7 +94,7 @@ pip install -r requirements.txt
       cache=False
 )
 ```
-  - data.yml
+  - data.yaml
   ```
   train: dataset/yolo/train/images
   val: dataset/yolo/val/images
