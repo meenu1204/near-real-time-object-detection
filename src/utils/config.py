@@ -23,7 +23,7 @@ YOLO_TRAIN_LABEL_DIR = BASE_DIR / os.getenv("YOLO_TRAIN_LABEL_DIR")
 YOLO_VAL_IMG_DIR = BASE_DIR / os.getenv("YOLO_VAL_IMG_DIR")
 YOLO_VAL_LABEL_DIR = BASE_DIR / os.getenv("YOLO_VAL_LABEL_DIR")
 
-#TEST_IMAGE_DIR = BASE_DIR / os.getenv("TEST_IMAGE_DIR")
+TEST_IMAGE_DIR = BASE_DIR / os.getenv("TEST_IMAGE_DIR")
 #TRAINED_MODEL = BASE_DIR / os.getenv("TRAINED_MODEL")
 
 # KITTI to YOLO class mapping
@@ -37,3 +37,9 @@ YOLO_CLASS_MAP = {
 SPLIT_TEST_SIZE = 0.2
 SEED = 42
 
+# Model weights
+YOLO_BEST_MODEL = BASE_DIR / os.getenv("YOLO_BEST_MODEL")
+
+# Kafka config
+KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "kitti-stream")
