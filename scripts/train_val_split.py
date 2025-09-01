@@ -5,9 +5,7 @@
 import shutil
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-
 from sklearn.model_selection import train_test_split
-
 from src.utils.config import (
     RAW_TRAIN_IMAGE_DIR,
     RAW_TRAIN_LABEL_DIR,
@@ -64,5 +62,3 @@ def split_dataset_train_val():
     with ThreadPoolExecutor() as executor:
         executor.map(move_file, val_img_files)
 
-if __name__ == "__main__":
-    split_dataset_train_val()
