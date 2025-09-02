@@ -1,27 +1,30 @@
 # File: train_yolo.py
+# Description: Trains a YOLOv8 object detector on dataset defined in data.yaml
 
 # import necessary libraries
-from src.utils.config import BASE_DIR
+#from src.utils.config import BASE_DIR
 from ultralytics import YOLO
 
 def train_yolo_model():
     """
-    Train YOLOv8n on the dataset mentioned in data.yaml
-    :return: 
+    Train the model
     """
 
-    # yolov8n.pt: Pretrained weights on COCO
+    # yolov8n.pt: Load COCO-pretrained YOLOv8n weights
     model = YOLO("yolov8n.pt")
 
     # Train the model
-    model.train(
-        data=str(BASE_DIR / "data.yaml"),
-        epochs=10,
+    results = model.train(
+        data="data.yaml",
+        epochs=30,
         imgsz=320,
-        batch=4,
-        workers=5,
+        batch=2,
+        workers=2,
         name="yolov8n",
         pretrained=True,
-        patience=5,
+        patience=10,
         cache=False
     )
+
+if __name__ == "__main__":
+    train_yolo_model()
